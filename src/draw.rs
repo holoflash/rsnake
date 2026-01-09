@@ -1,7 +1,7 @@
 use crate::colors;
 use crate::physics::{Direction, Position};
 use piston_window::types::Color;
-use piston_window::{rectangle, Context, G2d};
+use piston_window::{Context, G2d, rectangle};
 
 pub const BLOCK_SIZE: f64 = 25.0;
 
@@ -52,8 +52,6 @@ pub fn draw_snake_head(ctx: &Context, g: &mut G2d, c: Color, pos: &Position, dir
         }
     }
 }
-
-pub fn draw_fruit(ctx: &Context, g: &mut G2d, c: Color, pos: &Position) {}
 
 pub fn draw_overlay(ctx: &Context, g: &mut G2d, c: Color, size: (u32, u32)) {
     rectangle(

@@ -41,7 +41,7 @@ impl Snake {
     //     self.tail.push_back(Position { x, y })
     // }
     pub fn update(&mut self, width: u32, height: u32) {
-        if self.tail.len() > 0 {
+        if !self.tail.is_empty() {
             self.tail.push_front(self.head.clone());
             self.tail.pop_back();
         }
@@ -68,10 +68,10 @@ impl Snake {
 
     pub fn draw(&self, ctx: &Context, g: &mut G2d) {
         for block in self.tail.iter() {
-            draw_block(&ctx, g, colors::SNAKE, block)
+            draw_block(ctx, g, colors::SNAKE, block)
         }
 
-        draw_snake_head(&ctx, g, colors::SNAKE, &self.head, &self.direction);
+        draw_snake_head(ctx, g, colors::SNAKE, &self.head, &self.direction);
     }
 
     pub fn set_dir(&mut self, dir: Direction) {
@@ -88,7 +88,7 @@ impl Snake {
     }
 
     pub fn get_len(&self) -> usize {
-        &self.tail.len() - INITIAL_SNAKE_TAIL_LENGTH
+        self.tail.len() - INITIAL_SNAKE_TAIL_LENGTH
     }
 
     // pub fn is_alive(&self, size: (u32, u32)) -> bool {
@@ -114,7 +114,7 @@ impl Snake {
         false
     }
 
-    pub fn will_tail_overlapp(&self) -> bool {
+    pub fn will_tail_overlap(&self) -> bool {
         let next = self.next_head_pos();
 
         for pos in self.tail.iter() {

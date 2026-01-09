@@ -23,7 +23,7 @@ use draw::blocks_in_pixels;
 use game::Game;
 use piston_window::*;
 
-const WINDOW_TITLE: &'static str = "rsnake";
+const WINDOW_TITLE: &str = "rsnake";
 const WIDTH: u32 = 25;
 const HEIGHT: u32 = 25;
 
@@ -38,12 +38,16 @@ fn main() {
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
         .unwrap();
-    let ref font = assets.join("retro-gaming.ttf");
-    let factory = window.factory.clone();
-    let mut glyphs = Glyphs::new(font, TextureContext {
-        factory: window.factory.clone(),
-        encoder: window.factory.create_command_buffer().into(),
-    }, TextureSettings::new()).unwrap();
+    let font = assets.join("retro-gaming.ttf");
+    let mut glyphs = Glyphs::new(
+        font,
+        TextureContext {
+            factory: window.factory.clone(),
+            encoder: window.factory.create_command_buffer().into(),
+        },
+        TextureSettings::new(),
+    )
+    .unwrap();
 
     let mut main: Game = Game::new(WIDTH, HEIGHT);
     main.start();
@@ -53,18 +57,19 @@ fn main() {
             main.key_down(key);
         }
 
-        window.draw_2d(&event, |ctx, g, _| {
+        window.draw_2d(&event, |ctx, g, device| {
             clear(colors::BACKGROUND, g);
             text::Text::new_color(colors::SCORE, 20)
                 .draw(
-                    main.get_score().to_string().as_ref(),
+                    format!("{}", main.get_score()).as_str(),
                     &mut glyphs,
                     &ctx.draw_state,
-                    ctx.transform.trans(0.0, 20.0),
+                    ctx.transform.trans(10.0, 30.0),
                     g,
                 )
                 .unwrap();
             main.draw(ctx, g);
+            glyphs.factory.encoder.flush(device);
         });
 
         event.update(|arg| {
